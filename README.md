@@ -49,6 +49,7 @@ All Displayable Options as of v1.9.1
     - In An Interior
     - In A Cutscene
     - Using Voice Chat
+- Player Talking
 - Health
 - Armor
 - Wanted Level
@@ -73,5 +74,5 @@ All Displayable Options as of v1.9.1
 - Heading (Direction)
 - Current Street Name
 - Current Zone Name
--  Current Radio Station
+- Current Radio Station
 - Current Interior ID
