@@ -10,19 +10,15 @@ local function RGBAToInt(R, G, B, A)
 end
 
 local function addCommasToNumber(number, seperator)
-    local formattedNumber = tostring(number)
-    local parts = {}
+    local formatted = tostring(number)
+    local reversed = formatted:reverse()
 
-    for i = #formattedNumber, 1, -3 do
-        local part = formattedNumber:sub(math.max(i - 2, 1), i)
-        table.insert(parts, part)
+    local chunks = {}
+    for i = 1, #reversed, 3 do
+        chunks[#chunks + 1] = reversed:sub(i, i + 2)
     end
 
-    local reversedParts = {}
-    for i = #parts, 1, -1 do
-        table.insert(reversedParts, parts[i])
-    end
-    return table.concat(reversedParts, seperator)
+    return table.concat(chunks, seperator):reverse()
 end
 
 local function calculatePercentage(minValue, maxValue, currentValue)
@@ -34,9 +30,9 @@ local function calculatePercentage(minValue, maxValue, currentValue)
         return 0
     elseif currentValue >= maxValue then
         return 100
-    else
-        return ((currentValue - minValue) / (maxValue - minValue)) * 100
     end
+
+    return ((currentValue - minValue) / (maxValue - minValue)) * 100
 end
 
 local frameCounter = 0
@@ -209,76 +205,76 @@ local radioStations = {
 }
 
 local transitionStates = {
-    ["EMPTY"] = 0,
-    ["SP_SWOOP_UP"] = 1,
-    ["MP_SWOOP_UP"] = 2,
-    ["CREATOR_SWOOP_UP"] = 3,
-    ["PRE_HUD_CHECKS"] = 4,
-    ["WAIT_HUD_EXIT"] = 5,
-    ["WAIT_FOR_SUMMON"] = 6,
-    ["SP_SWOOP_DOWN"] = 7,
-    ["MP_SWOOP_DOWN"] = 8,
-    ["CANCEL_JOINING"] = 9,
-    ["RETRY_LOADING"] = 10,
-    ["RETRY_LOADING_SLOT_1"] = 11,
-    ["RETRY_LOADING_SLOT_2"] = 12,
-    ["RETRY_LOADING_SLOT_3"] = 13,
-    ["RETRY_LOADING_SLOT_4"] = 14,
-    ["WAIT_ON_INVITE"] = 15,
-    ["PREJOINING_FM_SESSION_CHECKS"] = 16,
-    ["LOOK_FOR_FRESH_JOIN_FM"] = 17,
-    ["LOOK_TO_JOIN_ANOTHER_SESSION_FM"] = 18,
-    ["CONFIRM_FM_SESSION_JOINING"] = 19,
-    ["WAIT_JOIN_FM_SESSION"] = 20,
-    ["CREATION_ENTER_SESSION"] = 21,
-    ["PRE_FM_LAUNCH_SCRIPT"] = 22,
-    ["FM_TEAMFULL_CHECK"] = 23,
-    ["START_FM_LAUNCH_SCRIPT"] = 24,
-    ["FM_TRANSITION_CREATE_PLAYER"] = 25,
-    ["IS_FM_AND_TRANSITION_READY"] = 26,
-    ["FM_SWOOP_DOWN"] = 27,
-    ["POST_BINK_VIDEO_WARP"] = 28,
-    ["FM_FINAL_SETUP_PLAYER"] = 29,
-    ["MOVE_FM_TO_RUNNING_STATE"] = 30,
-    ["FM_HOW_TO_TERMINATE"] = 31,
-    ["START_CREATOR_PRE_LAUNCH_SCRIPT_CHECK"] = 32,
-    ["START_CREATOR_LAUNCH_SCRIPT"] = 33,
-    ["CREATOR_TRANSITION_CREATE_PLAYER"] = 34,
-    ["IS_CREATOR_AND_TRANSITION_READY"] = 35,
-    ["CREATOR_SWOOP_DOWN"] = 36,
-    ["CREATOR_FINAL_SETUP_PLAYER"] = 37,
-    ["MOVE_CREATOR_TO_RUNNING_STATE"] = 38,
-    ["PREJOINING_TESTBED_SESSION_CHECKS"] = 39,
-    ["LOOK_FOR_FRESH_JOIN_TESTBED"] = 40,
-    ["LOOK_FOR_FRESH_HOST_TESTBED"] = 41,
-    ["LOOK_TO_JOIN_ANOTHER_SESSION_TESTBED"] = 42,
-    ["LOOK_TO_HOST_SESSION_TESTBED"] = 43,
-    ["CONFIRM_TESTBED_SESSION_JOINING"] = 44,
-    ["WAIT_JOIN_TESTBED_SESSION"] = 45,
-    ["START_TESTBED_LAUNCH_SCRIPT"] = 46,
-    ["TESTBED_TRANSITION_CREATE_PLAYER"] = 47,
-    ["IS_TESTBED_AND_TRANSITION_READY"] = 48,
-    ["TESTBED_SWOOP_DOWN"] = 49,
-    ["TESTBED_FINAL_SETUP_PLAYER"] = 50,
-    ["MOVE_TESTBED_TO_RUNNING_STATE"] = 51,
-    ["TESTBED_HOW_TO_TERMINATE"] = 52,
-    ["QUIT_CURRENT_SESSION_PROMPT"] = 53,
-    ["WAIT_FOR_TRANSITION_SESSION_TO_SETUP"] = 54,
-    ["TERMINATE_SP"] = 55,
-    ["WAIT_TERMINATE_SP"] = 56,
-    ["KICK_TERMINATE_SESSION"] = 57,
-    ["TERMINATE_SESSION"] = 58,
-    ["WAIT_TERMINATE_SESSION"] = 59,
-    ["TERMINATE_SESSION_AND_HOLD"] = 60,
-    ["TERMINATE_SESSION_AND_MOVE_INTO_HOLDING_STATE"] = 61,
-    ["TEAM_SWAPPING_CHECKS"] = 62,
-    ["RETURN_TO_SINGLEPLAYER"] = 63,
-    ["WAIT_FOR_SINGLEPLAYER_TO_START"] = 64,
-    ["WAITING_FOR_EXTERNAL_TERMINATION_CALL"] = 65,
-    ["TERMINATE_MAINTRANSITION"] = 66,
-    ["WAIT_FOR_DIRTY_LOAD_CONFIRM"] = 67,
-    ["DLC_INTRO_BINK"] = 68,
-    ["SPAWN_INTO_PERSONAL_VEHICLE"] = 69
+    [0] = "EMPTY",
+    [1] = "SP_SWOOP_UP",
+    [2] = "MP_SWOOP_UP",
+    [3] = "CREATOR_SWOOP_UP",
+    [4] = "PRE_HUD_CHECKS",
+    [5] = "WAIT_HUD_EXIT",
+    [6] = "WAIT_FOR_SUMMON",
+    [7] = "SP_SWOOP_DOWN",
+    [8] = "MP_SWOOP_DOWN",
+    [9] = "CANCEL_JOINING",
+    [10] = "RETRY_LOADING",
+    [11] = "RETRY_LOADING_SLOT_1",
+    [12] = "RETRY_LOADING_SLOT_2",
+    [13] = "RETRY_LOADING_SLOT_3",
+    [14] = "RETRY_LOADING_SLOT_4",
+    [15] = "WAIT_ON_INVITE",
+    [16] = "PREJOINING_FM_SESSION_CHECKS",
+    [17] = "LOOK_FOR_FRESH_JOIN_FM",
+    [18] = "LOOK_TO_JOIN_ANOTHER_SESSION_FM",
+    [19] = "CONFIRM_FM_SESSION_JOINING",
+    [20] = "WAIT_JOIN_FM_SESSION",
+    [21] = "CREATION_ENTER_SESSION",
+    [22] = "PRE_FM_LAUNCH_SCRIPT",
+    [23] = "FM_TEAMFULL_CHECK",
+    [24] = "START_FM_LAUNCH_SCRIPT",
+    [25] = "FM_TRANSITION_CREATE_PLAYER",
+    [26] = "IS_FM_AND_TRANSITION_READY",
+    [27] = "FM_SWOOP_DOWN",
+    [28] = "POST_BINK_VIDEO_WARP",
+    [29] = "FM_FINAL_SETUP_PLAYER",
+    [30] = "MOVE_FM_TO_RUNNING_STATE",
+    [31] = "FM_HOW_TO_TERMINATE",
+    [32] = "START_CREATOR_PRE_LAUNCH_SCRIPT_CHECK",
+    [33] = "START_CREATOR_LAUNCH_SCRIPT",
+    [34] = "CREATOR_TRANSITION_CREATE_PLAYER",
+    [35] = "IS_CREATOR_AND_TRANSITION_READY",
+    [36] = "CREATOR_SWOOP_DOWN",
+    [37] = "CREATOR_FINAL_SETUP_PLAYER",
+    [38] = "MOVE_CREATOR_TO_RUNNING_STATE",
+    [39] = "PREJOINING_TESTBED_SESSION_CHECKS",
+    [40] = "LOOK_FOR_FRESH_JOIN_TESTBED",
+    [41] = "LOOK_FOR_FRESH_HOST_TESTBED",
+    [42] = "LOOK_TO_JOIN_ANOTHER_SESSION_TESTBED",
+    [43] = "LOOK_TO_HOST_SESSION_TESTBED",
+    [44] = "CONFIRM_TESTBED_SESSION_JOINING",
+    [45] = "WAIT_JOIN_TESTBED_SESSION",
+    [46] = "START_TESTBED_LAUNCH_SCRIPT",
+    [47] = "TESTBED_TRANSITION_CREATE_PLAYER",
+    [48] = "IS_TESTBED_AND_TRANSITION_READY",
+    [49] = "TESTBED_SWOOP_DOWN",
+    [50] = "TESTBED_FINAL_SETUP_PLAYER",
+    [51] = "MOVE_TESTBED_TO_RUNNING_STATE",
+    [52] = "TESTBED_HOW_TO_TERMINATE",
+    [53] = "QUIT_CURRENT_SESSION_PROMPT",
+    [54] = "WAIT_FOR_TRANSITION_SESSION_TO_SETUP",
+    [55] = "TERMINATE_SP",
+    [56] = "WAIT_TERMINATE_SP",
+    [57] = "KICK_TERMINATE_SESSION",
+    [58] = "TERMINATE_SESSION",
+    [59] = "WAIT_TERMINATE_SESSION",
+    [60] = "TERMINATE_SESSION_AND_HOLD",
+    [61] = "TERMINATE_SESSION_AND_MOVE_INTO_HOLDING_STATE",
+    [62] = "TEAM_SWAPPING_CHECKS",
+    [63] = "RETURN_TO_SINGLEPLAYER",
+    [64] = "WAIT_FOR_SINGLEPLAYER_TO_START",
+    [65] = "WAITING_FOR_EXTERNAL_TERMINATION_CALL",
+    [66] = "TERMINATE_MAINTRANSITION",
+    [67] = "WAIT_FOR_DIRTY_LOAD_CONFIRM",
+    [68] = "DLC_INTRO_BINK",
+    [69] = "SPAWN_INTO_PERSONAL_VEHICLE"
 }
 
 tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainParent.id, function(f)
@@ -333,14 +329,7 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
 
         if tFeature["transitionState"].on then
             local stateNumber = script.get_global_i(1575011)
-            local stateName = "Unknown State"
-
-            for name, number in pairs(transitionStates) do
-                if number == stateNumber then
-                    stateName = name
-                    break
-                end
-            end
+            local stateName = transitionStates[stateNumber] or "Unknown State"
 
             info[#info + 1] = "Transition State: " .. stateName .. " [" .. stateNumber .. "]"
         end
