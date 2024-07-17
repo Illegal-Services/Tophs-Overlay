@@ -1,10 +1,11 @@
 # My Fork Changes (IB_U_Z_Z_A_R_D)
 
 <p align="center">
-  <strong>All credit goes to <a href="https://github.com/Toph2T1/Tophs-Overlay">Tophs-Overlay</a> for the original source code.</strong>
-  <br><br>
+
   <img src="https://img.shields.io/badge/Online_Version-1.69-green" alt="Online Version">
   <img src="https://img.shields.io/badge/Game_Build-3274-green" alt="Game Build">
+  <br><br>
+  <strong>All credit goes to <a href="https://github.com/Toph2T1/Tophs-Overlay">Tophs-Overlay</a> for the original source code.</strong>
 </p>
 
 I have forked this project because the original script owner has been inactive for the past seven months and has not merged my pull requests on their GitHub repository.<br>
