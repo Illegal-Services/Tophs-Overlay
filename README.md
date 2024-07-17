@@ -1,4 +1,23 @@
-# Toph's Overlay.
+# My Fork Changes (IB_U_Z_Z_A_R_D)
+
+**All credit goes to [Tophs-Overlay](https://github.com/Toph2T1/Tophs-Overlay) for the original development of the source code.**<br>
+
+I have forked this project because the original script owner has been inactive for the past seven months and has not merged my pull requests on their GitHub repository.<br>
+Since the project is open source, I am taking the initiative to continue updating it independently, as it is an excellent script.<br>
+
+Here are the changes I have made:
+
+- Improved code.
+- Reduced code.
+- Fixed the issue where "Next Host" occasionally displayed the wrong player.
+- Replaced all tab characters in the source code with four spaces for consistent alignment.
+- Updated the "Transition State" global to GTA Build 1.0.3258.0
+- Added the "Player Talking" feature.
+- Removed trailing spaces from the source code for better readability and consistency.
+
+---
+
+# Toph's Overlay
 A Lua script for 2Take1Menu that shows you information about various things.
 
 All Displayable Options as of v1.9.1
