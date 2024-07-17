@@ -269,25 +269,25 @@ local transitionStates = {
 }
 
 tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainParent.id, function(f)
-    while f.on do
-        system.wait()
 
-        local function get_player_display_color(targetId, targetName, playerName)
-            local color = ""
+    local function get_player_display_color(targetId, targetName, playerName)
+        local color = ""
 
-            if targetId ~= nil and targetName ~= "N/A" then
-                if targetName == playerName then
-                    color = "#FFB6599B#"
-                elseif player.is_player_friend(targetId) then
-                    color = "#FFE5B55D#"
-                elseif player.is_player_modder(targetId, -1) then
-                    color = "#FF0000FF#"
-                end
+        if targetId ~= nil and targetName ~= "N/A" then
+            if targetName == playerName then
+                color = "#FFB6599B#"
+            elseif player.is_player_friend(targetId) then
+                color = "#FFE5B55D#"
+            elseif player.is_player_modder(targetId, -1) then
+                color = "#FF0000FF#"
             end
-
-            return color
         end
 
+        return color
+    end
+
+    while f.on do
+        system.wait()
 
         local info = {}
 
@@ -411,19 +411,13 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
         end
 
         if tFeature["nextSessionHost"].on then
-            local lowestPriorityPlayerInfos = { id = nil, name = "N/A", priority = nil }
+            local lowestPriorityPlayerInfos = { id = nil, name = "N/A", priority = 33 }
 
-            if
-                network.is_session_started()
-                and player.get_host() ~= -1
-            then
+            if network.is_session_started() and player.get_host() ~= -1 then
                 for i = 0, 31 do
-                    if
-                        player.is_player_valid(i)
-                        and not player.is_player_host(i)
-                    then
+                    if player.is_player_valid(i) and not player.is_player_host(i) then
                         local priority = player.get_player_host_priority(i)
-                        if (lowestPriorityPlayerInfos.priority == nil) or (priority < lowestPriorityPlayerInfos.priority) then
+                        if priority < lowestPriorityPlayerInfos.priority then
                             lowestPriorityPlayerInfos.id = i
                             lowestPriorityPlayerInfos.name = player.get_player_name(i)
                             lowestPriorityPlayerInfos.priority = priority
