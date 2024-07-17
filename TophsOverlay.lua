@@ -47,7 +47,7 @@ local function get_game_fps(frequency)
 end
 
 local function get_player_display_color(targetId, targetName, playerName)
-    if targetId ~= nil and targetName ~= "N/A" then
+    if targetId and targetName ~= "N/A" then
         if targetName == playerName then
             return "#FFB6599B#"
         elseif player.is_player_friend(targetId) then
@@ -334,7 +334,6 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
             info[#info + 1] = "Transition State: " .. stateName .. " [" .. stateNumber .. "]"
         end
 
-
         if tFeature["currentSessionType"].on then
             if isTrusted then
                 if network.is_session_started() then
@@ -359,7 +358,7 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
 
         if tFeature["connectedViaRelay"].on then
             if isTrusted then
-                if native.call(0x16D3D49902F697BB, playerId):__tointeger() == 1 then
+                if native.call(0x16D3D49902F697BB, playerId):__tointeger() == 1 then -- NETWORK::NETWORK_IS_CONNECTED_VIA_RELAY
                     info[#info + 1] = "Connected Via Relay: True"
                 else
                     info[#info + 1] = "Connected Via Relay: False"
@@ -430,7 +429,7 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
 
         if tFeature["averageLatency"].on then
             if isTrusted then
-                info[#info + 1] = "Average Ping: " .. math.floor(native.call(0xD414BE129BB81B32, player.get_host()):__tonumber()) .. "ms"
+                info[#info + 1] = "Average Ping: " .. math.floor(native.call(0xD414BE129BB81B32, player.get_host()):__tonumber()) .. "ms" -- NETWORK::NETWORK_GET_AVERAGE_LATENCY
             else
                 info[#info + 1] = "Average Ping: Unknown (Natives Trusted Mode Not Enabled)"
             end
@@ -478,10 +477,10 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
                         inInterior = inInterior + 1
                     end
                     if isTrusted then
-                        if native.call(0xE73092F4157CD126, i):__tointeger() == 1 or native.call(0x63F9EE203C3619F2, i):__tointeger() == 1 then
+                        if native.call(0xE73092F4157CD126, i):__tointeger() == 1 or native.call(0x63F9EE203C3619F2, i):__tointeger() == 1 then -- NETWORK::IS_PLAYER_IN_CUTSCENE, NETWORK::NETWORK_IS_PLAYER_IN_MP_CUTSCENE
                             inCutscene = inCutscene + 1
                         end
-                        if native.call(0x031E11F3D447647E, i):__tointeger() == 1 then
+                        if native.call(0x031E11F3D447647E, i):__tointeger() == 1 then -- NETWORK::NETWORK_IS_PLAYER_TALKING
                             isTalking = isTalking + 1
                         end
                     else
@@ -552,7 +551,6 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
             end
         end
 
-
         if tFeature["inInterior"].on then
             if tFeature["currentPlayerCount"].on then
                 info[#info + 1] = "\tIn Interior: " .. inInterior
@@ -621,7 +619,7 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
                     [3] = "Free Aim"
                 }
 
-                local modeNumber = native.call(0xBB41AFBBBC0A0287):__tointeger()
+                local modeNumber = native.call(0xBB41AFBBBC0A0287):__tointeger() -- PAD::GET_LOCAL_PLAYER_AIM_STATE
                 local modeText = targetingMode[modeNumber] or "Unknown Targeting Mode"
 
                 info[#info + 1] = "Current Targeting Mode: " .. modeText
@@ -632,7 +630,7 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
 
         if tFeature["cameraFov"].on then
             if isTrusted then
-                info[#info + 1] = "Current FOV: " .. math.floor(native.call(0x80EC114669DAEFF4):__tonumber())
+                info[#info + 1] = "Current FOV: " .. math.floor(native.call(0x80EC114669DAEFF4):__tonumber()) -- CAM::GET_FINAL_RENDERED_CAM_FOV
             else
                 info[#info + 1] = "Current FOV: Unknown (Natives Trusted Mode Not Enabled)"
             end
@@ -671,7 +669,6 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
                 info[#info + 1] = "Vehicle Health: Unknown (Natives Trusted Mode Not Enabled)"
             end
         end
-
 
         if tFeature["vehicleGear"].on then
             if ped.is_ped_in_any_vehicle(playerPed) then
@@ -860,9 +857,9 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
                 local streetName = native.ByteBuffer8()
                 local crossingRoad = native.ByteBuffer8()
 
-                native.call(0x2EB41072B4C1E4C0, playerPos.x, playerPos.y, playerPos.z, streetName, crossingRoad)
-                streetInfo.name = native.call(0xD0EF8A959B8A4CB9, streetName:__tointeger()):__tostring(true)
-                streetInfo.xRoad = native.call(0xD0EF8A959B8A4CB9, crossingRoad:__tointeger()):__tostring(true)
+                native.call(0x2EB41072B4C1E4C0, playerPos.x, playerPos.y, playerPos.z, streetName, crossingRoad) -- PATHFIND::GET_STREET_NAME_AT_COORD
+                streetInfo.name = native.call(0xD0EF8A959B8A4CB9, streetName:__tointeger()):__tostring(true) -- HUD::GET_STREET_NAME_FROM_HASH_KEY
+                streetInfo.xRoad = native.call(0xD0EF8A959B8A4CB9, crossingRoad:__tointeger()):__tostring(true) -- HUD::GET_STREET_NAME_FROM_HASH_KEY
 
                 if tFeature["displayCrossroads"].on and streetInfo.xRoad ~= "" then
                     info[#info + 1] = "Current Street: " .. streetInfo.name .. " (Intersecting With: " .. streetInfo.xRoad .. ")"
@@ -896,7 +893,6 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
                 info[#info + 1] = "Current Radio Station: Unknown (Natives Trusted Mode Not Enabled)"
             end
         end
-
 
         if tFeature["interiorID"].on then
             info[#info + 1] = "Interior ID: " .. interior.get_interior_from_entity(playerPed)
