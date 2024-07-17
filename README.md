@@ -11,7 +11,7 @@
 I have forked this project because the original script owner has been inactive for the past seven months and has not merged my pull requests on their GitHub repository.<br>
 Since the project is open source, I am taking the initiative to continue updating it independently, as it is an excellent script.<br>
 
-## Here are the changes I have made:
+## ChangeLog:
 
 - Improved code.
 - Reduced code.
