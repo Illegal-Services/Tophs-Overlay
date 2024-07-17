@@ -270,6 +270,25 @@ local transitionStates = {
 
 tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainParent.id, function(f)
     while f.on do
+        system.wait()
+
+        local function get_player_display_color(targetId, targetName, playerName)
+            local color = ""
+
+            if targetId ~= nil and targetName ~= "N/A" then
+                if targetName == playerName then
+                    color = "#FFB6599B#"
+                elseif player.is_player_friend(targetId) then
+                    color = "#FFE5B55D#"
+                elseif player.is_player_modder(targetId, -1) then
+                    color = "#FF0000FF#"
+                end
+            end
+
+            return color
+        end
+
+
         local info = {}
 
         local playerId = player.player_id()
@@ -317,7 +336,7 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
         end
 
         if tFeature["transitionState"].on then
-            local stateNumber = script.get_global_i(1575008)
+            local stateNumber = script.get_global_i(1575011)
             local stateName = "Unknown State"
 
             for name, number in pairs(transitionStates) do
@@ -378,26 +397,21 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
         end
 
         if tFeature["currentSessionHost"].on then
-            if network.is_session_started() then
-                local sessionhost = player.get_host()
-                local sessionHostName = (sessionhost >= 0 and player.get_player_name(sessionhost)) or "N/A"
+            local sessionHostInfos = { id = nil, name = "N/A" }
 
-                if sessionHostName == playerName then
-                    info[#info + 1] = "Session Host: #FFB6599B#" .. sessionHostName .. "#DEFAULT#"
-                elseif player.is_player_friend(sessionhost) then
-                    info[#info + 1] = "Session Host: #FFE5B55D#" .. sessionHostName .. "#DEFAULT#"
-                elseif player.is_player_modder(sessionhost, -1) then
-                    info[#info + 1] = "Session Host: #FF0000FF#" .. sessionHostName .. "#DEFAULT#"
-                else
-                    info[#info + 1] = "Session Host: " .. sessionHostName .. "#DEFAULT#"
+            if network.is_session_started() and player.get_host() ~= -1 then
+                local sessionHostId = player.get_host()
+                if sessionHostId >= 0 then
+                    sessionHostInfos.id = sessionHostId
+                    sessionHostInfos.name = player.get_player_name(sessionHostId)
                 end
-            else
-                info[#info + 1] = "Session Host: N/A"
             end
+
+            info[#info + 1] = "Session Host: " .. get_player_display_color(sessionHostInfos.id, sessionHostInfos.name, playerName) .. sessionHostInfos.name .. "#DEFAULT#"
         end
 
         if tFeature["nextSessionHost"].on then
-            local lowestPriorityPlayer = nil
+            local lowestPriorityPlayerInfos = { id = nil, name = "N/A", priority = nil }
 
             if
                 network.is_session_started()
@@ -409,57 +423,30 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
                         and not player.is_player_host(i)
                     then
                         local priority = player.get_player_host_priority(i)
-
-                        if lowestPriorityPlayer == nil then
-                            lowestPriorityPlayer = {
-                                id = i,
-                                value = priority
-                            }
-                        else
-                            if priority < lowestPriorityPlayer.value then
-                                lowestPriorityPlayer.id = i
-                                lowestPriorityPlayer.value = priority
-                            end
+                        if (lowestPriorityPlayerInfos.priority == nil) or (priority < lowestPriorityPlayerInfos.priority) then
+                            lowestPriorityPlayerInfos.id = i
+                            lowestPriorityPlayerInfos.name = player.get_player_name(i)
+                            lowestPriorityPlayerInfos.priority = priority
                         end
                     end
                 end
             end
 
-            if lowestPriorityPlayer then
-                local nextSessionHost = lowestPriorityPlayer.id
-                local nextSessionHostName = player.get_player_name(nextSessionHost)
-
-                if nextSessionHost == playerId then
-                    info[#info + 1] = "Next Session Host: #FFB6599B#" .. nextSessionHostName .. "#DEFAULT#"
-                elseif player.is_player_friend(nextSessionHost) then
-                    info[#info + 1] = "Next Session Host: #FFE5B55D#" .. nextSessionHostName .. "#DEFAULT#"
-                elseif player.is_player_modder(nextSessionHost, -1) then
-                    info[#info + 1] = "Next Session Host: #FF0000FF#" .. nextSessionHostName .. "#DEFAULT#"
-                else
-                    info[#info + 1] = "Next Session Host: " .. nextSessionHostName
-                end
-            else
-                info[#info + 1] = "Next Session Host: N/A"
-            end
+            info[#info + 1] = "Next Session Host: " .. get_player_display_color(lowestPriorityPlayerInfos.id, lowestPriorityPlayerInfos.name, playerName) .. lowestPriorityPlayerInfos.name .. "#DEFAULT#"
         end
 
         if tFeature["currentScriptHost"].on then
-            if network.is_session_started() then
-                local scriptHost = script.get_host_of_this_script()
-                local scriptHostName = player.get_player_name(scriptHost) or "N/A"
+            local scriptHostInfos = { id = nil, name = "N/A" }
 
-                if scriptHostName == playerName then
-                    info[#info + 1] = "Script Host: #FFB6599B#" .. scriptHostName .. "#DEFAULT#"
-                elseif player.is_player_friend(scriptHost) then
-                    info[#info + 1] = "Script Host: #FFE5B55D#" .. scriptHostName .. "#DEFAULT#"
-                elseif player.is_player_modder(scriptHost, -1) then
-                    info[#info + 1] = "Script Host: #FF0000FF#" .. scriptHostName .. "#DEFAULT#"
-                else
-                    info[#info + 1] = "Script Host: " .. scriptHostName .. "#DEFAULT#"
+            if network.is_session_started() and player.get_host() ~= -1 then
+                local scriptHostId = script.get_host_of_this_script()
+                if scriptHostId >= 0 then
+                    scriptHostInfos.id = scriptHostId
+                    scriptHostInfos.name = player.get_player_name(scriptHostId)
                 end
-            else
-                info[#info + 1] = "Script Host: N/A"
             end
+
+            info[#info + 1] = "Script Host: " .. get_player_display_color(scriptHostInfos.id, scriptHostInfos.name, playerName) .. scriptHostInfos.name .. "#DEFAULT#"
         end
 
         if tFeature["averageLatency"].on then
@@ -515,14 +502,11 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
                         if native.call(0xE73092F4157CD126, i):__tointeger() == 1 or native.call(0x63F9EE203C3619F2, i):__tointeger() == 1 then
                             inCutscene = inCutscene + 1
                         end
-                    else
-                        inCutscene = "Unknown (Natives Trusted Mode Not Enabled)"
-                    end
-                    if isTrusted then
                         if native.call(0x031E11F3D447647E, i):__tointeger() == 1 then
                             isTalking = isTalking + 1
                         end
                     else
+                        inCutscene = "Unknown (Natives Trusted Mode Not Enabled)"
                         isTalking = "Unknown (Natives Trusted Mode Not Enabled)"
                     end
                 end
@@ -612,6 +596,29 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
             else
                 info[#info + 1] = "Players Talking: " .. isTalking
             end
+        end
+
+        if tFeature["currentPlayerTalking"].on then
+            local currentPlayerTalking = { id = nil, name = "N/A" }
+
+            if isTrusted then
+                if network.is_session_started() then
+                    for i = 0, 31 do
+                        if
+                            player.is_player_valid(i)
+                            and native.call(0x031E11F3D447647E, i):__tointeger() == 1 -- NETWORK::NETWORK_IS_PLAYER_TALKING
+                        then
+                            currentPlayerTalking.id = i
+                            currentPlayerTalking.name = player.get_player_name(i)
+                            break
+                        end
+                    end
+                end
+            else
+                currentPlayerTalking.name = "Unknown (Natives Trusted Mode Not Enabled)"
+            end
+
+            info[#info + 1] = "Player Talking: " .. get_player_display_color(currentPlayerTalking.id, currentPlayerTalking.name, playerName) .. currentPlayerTalking.name .. "#DEFAULT#"
         end
 
         if tFeature["currentHealth"].on then
@@ -943,7 +950,6 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
         end
 
         scriptdraw.draw_text(table.concat(info, "\n"), pos, v2(1, 1), vFeature["textScale"].value, color, flags, vFeature["textFont"].value)
-        system.wait()
     end
 end)
 
@@ -976,6 +982,7 @@ local displayOptions = menu.add_feature("Displayable Options", "parent", mainPar
         tFeature["inCutscene"] = menu.add_feature("In An Cutscene", "toggle", extraPlayerCounts.id)
         tFeature["isTalking"] = menu.add_feature("Is Talking", "toggle", extraPlayerCounts.id)
 
+    tFeature["currentPlayerTalking"] = menu.add_feature("Current Player Talking", "toggle", displayOptions.id)
     tFeature["currentHealth"] = menu.add_feature("Current Health", "toggle", displayOptions.id)
     tFeature["currentArmor"] = menu.add_feature("Current Armor", "toggle", displayOptions.id)
     tFeature["wantedLevel"] = menu.add_feature("Wanted Level", "toggle", displayOptions.id)
@@ -1132,6 +1139,7 @@ extraPlayerCounts.hint = "Additional player related counts to display."
     tFeature["inCutscene"].hint = "Displays the amount of players who are watching a cutscene."
     tFeature["isTalking"].hint = "Displays the amount of players talking via Voice Chat."
 
+tFeature["currentPlayerTalking"].hint = "Displays the player currently talking in Voice Chat."
 tFeature["currentHealth"].hint = "Displays your current and maximum health values."
 tFeature["currentArmor"].hint = "Displays your current and maximum Armor values."
 tFeature["wantedLevel"].hint = "Displays your current wanted level."
