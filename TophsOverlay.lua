@@ -271,19 +271,17 @@ local transitionStates = {
 tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainParent.id, function(f)
 
     local function get_player_display_color(targetId, targetName, playerName)
-        local color = ""
-
         if targetId ~= nil and targetName ~= "N/A" then
             if targetName == playerName then
-                color = "#FFB6599B#"
+                return "#FFB6599B#"
             elseif player.is_player_friend(targetId) then
-                color = "#FFE5B55D#"
+                return "#FFE5B55D#"
             elseif player.is_player_modder(targetId, -1) then
-                color = "#FF0000FF#"
+                return "#FF0000FF#"
             end
         end
 
-        return color
+        return ""
     end
 
     while f.on do
