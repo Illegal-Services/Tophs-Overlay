@@ -50,6 +50,19 @@ local function get_game_fps(frequency)
     return storedFPS
 end
 
+local function get_player_display_color(targetId, targetName, playerName)
+    if targetId ~= nil and targetName ~= "N/A" then
+        if targetName == playerName then
+            return "#FFB6599B#"
+        elseif player.is_player_friend(targetId) then
+            return "#FFE5B55D#"
+        elseif player.is_player_modder(targetId, -1) then
+            return "#FF0000FF#"
+        end
+    end
+    return ""
+end
+
 local zones = {
     ["AIRP"] = "Los Santos International Airport",
     ["ALAMO"] = "Alamo Sea",
@@ -269,21 +282,6 @@ local transitionStates = {
 }
 
 tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainParent.id, function(f)
-
-    local function get_player_display_color(targetId, targetName, playerName)
-        if targetId ~= nil and targetName ~= "N/A" then
-            if targetName == playerName then
-                return "#FFB6599B#"
-            elseif player.is_player_friend(targetId) then
-                return "#FFE5B55D#"
-            elseif player.is_player_modder(targetId, -1) then
-                return "#FF0000FF#"
-            end
-        end
-
-        return ""
-    end
-
     while f.on do
         system.wait()
 
