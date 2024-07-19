@@ -387,7 +387,7 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
                 local sessionHostId = player.get_host()
                 if sessionHostId >= 0 then
                     sessionHostInfos.id = sessionHostId
-                    sessionHostInfos.name = player.get_player_name(sessionHostId)
+                    sessionHostInfos.name = player.get_player_name(sessionHostId) or "N/A"
                 end
             end
 
@@ -399,11 +399,11 @@ tFeature["enableOverlay"] = menu.add_feature("Enable Overlay", "toggle", mainPar
 
             if network.is_session_started() and player.get_host() ~= -1 then
                 for i = 0, 31 do
-                    if player.is_player_valid(i) and not player.is_player_host(i) then
+                    if player.is_player_valid(i) and not player.is_player_host(i) and player.get_host() ~= i then
                         local priority = player.get_player_host_priority(i)
                         if priority < lowestPriorityPlayerInfos.priority then
                             lowestPriorityPlayerInfos.id = i
-                            lowestPriorityPlayerInfos.name = player.get_player_name(i)
+                            lowestPriorityPlayerInfos.name = player.get_player_name(i) or "N/A"
                             lowestPriorityPlayerInfos.priority = priority
                         end
                     end
