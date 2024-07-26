@@ -1,6 +1,6 @@
 local tFeature = {} -- Toggle Features
 local vFeature = {} -- Value Features
-local INI = IniParser("cfg/TophsOverlaySettings.ini")
+local INI = IniParser("scripts\\TophsOverlay\\Settings.ini")
 local isTrusted = menu.is_trusted_mode_enabled(eTrustedFlags.LUA_TRUST_NATIVES)
 local mainParent = menu.add_feature("Toph's Overlay", "parent")
 
