@@ -19,6 +19,7 @@ Since the project is open source, I am taking the initiative to continue updatin
 - Replaced all tab characters in the source code with four spaces for consistent alignment.
 - Updated the "Transition State" global to GTA Build 1.0.3258.0
 - Added the "Player Talking" feature.
+- Added missing "Cayo Perico" zone.
 - Removed trailing spaces from the source code for better readability and consistency.
 
 ---
