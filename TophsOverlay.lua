@@ -98,6 +98,7 @@ local zones = {
     ["HAWICK"] = "Hawick",
     ["HORS"] = "Vinewood Racetrack",
     ["HUMLAB"] = "Humane Labs and Research",
+    ["ISHEIST"] = "Cayo Perico",
     ["JAIL"] = "Bolingbroke Penitentiary",
     ["KOREAT"] = "Little Seoul",
     ["LACT"] = "Land Act Reservoir",
